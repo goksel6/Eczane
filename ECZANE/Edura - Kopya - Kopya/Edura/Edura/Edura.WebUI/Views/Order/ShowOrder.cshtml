@@ -1,0 +1,105 @@
+﻿@model IEnumerable<AdminEditOrderModel>
+@{
+    ViewData["Title"] = "ShowOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<section id="content">
+    <div class="card" style="margin:30px 70px 70px 70px">
+
+        @if (Model.Count() != 0)
+        {
+            <div class="card-header">
+                <h2 style="margin-left:150px"> Siparişler</h2>
+            </div>
+            <hr />
+
+
+
+            <div class="container">
+                @foreach (var item1 in @Model)
+                {
+                    <div class="container" style="border:solid; border-color:darkslategray">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Sipariş Durumu</th>
+                                    <th>Sipariş Zamanı</th>
+                                    <th>Sipariş Adresi</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@item1.OrderId</td>
+                                    @if (@item1.OrderState == EnumOrderState.Completed)
+                                    {
+
+                                        <td>Siparişiniz Onaylandı <i class="fa fa-check"></i></td>
+                                    }
+                                    else
+                                    {
+                                        <td>Onay Bekleniyor <i class="fa fa-times"></i></td>
+
+                                    }
+
+                                    <td>@item1.OrderDate</td>
+                                    <td>@item1.Adres @item1.Sehir/@item1.Semt</td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Ürün Resmi</th>
+                                    <th>Alt Sipariş Id</th>
+                                    <th>Ürün Adı</th>
+                                    <th>Miktar</th>
+                                    <th>Birim Fiyat</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item2 in item1.orderLines)
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <img src="~/images/products/@item2.Image" width="60" />
+                                        </td>
+                                        <td>@item2.OrderLineId</td>
+                                        <td>@item2.ProductName</td>
+                                        <td>@item2.Quantity</td>
+                                        <td>@item2.Price.ToString("c")</td>
+                                    </tr>
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                    <hr />
+                }
+
+
+            </div>
+        }
+        else
+        {
+            <div style="margin:120px 30px 70px 30px; background-color:rgba(2, 188, 33, 0.41); color:#fff" class="alert" role="alert">
+                <i class="fa fa-exclamation-triangle fa-fw"></i>
+                Daha önce verilmiş siparişiniz bulunmamaktaıdr!
+
+            </div>
+            <div style="margin:70px 30px 70px 30px" class="text-right">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg"><i class="fa fa-arrow-circle-left fa-fw"></i>Alışverişe Devam Et</a>
+
+
+            </div>
+        }
+
+    </div>
+
+
+
+</section>

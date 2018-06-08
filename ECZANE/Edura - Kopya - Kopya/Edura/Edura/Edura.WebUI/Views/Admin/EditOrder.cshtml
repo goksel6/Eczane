@@ -1,0 +1,96 @@
+﻿@model AdminEditOrderModel
+@{
+    ViewData["Title"] = "EditOrder";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="cart">
+    <div class="card-header">
+        Sipariş Güncelle
+    </div>
+    <form asp-controller="Admin" asp-action="EditOrder" method="post" enctype="multipart/form-data">
+        <div class="card-body">
+            @Html.ValidationSummary()
+            @Html.AntiForgeryToken()
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <input type="hidden" name="OrderId" value="@Model.OrderId" />
+
+            <div class="form-group">
+                <label asp-for=" OrderId">Id</label>
+                <input asp-for="OrderId" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Username">Kullanıcı</label>
+                <input asp-for="Username" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for=" OrderDate">Sipariş Zamanı</label>
+                <input asp-for="OrderDate" class="form-control" />
+            </div>
+            <div class="form-group">
+                Sipariş Durumu
+                <select asp-for="OrderState" class="form-control">
+                    <option value="Waiting">Bekliyor</option>
+                    <option value="Completed">Tamamlandı</option>
+                </select>
+            </div>
+         
+
+        </div>
+        <div class="card-footer">
+            <input type="submit" class="btn btn-primary" value="Kaydet" />
+        </div>
+    </form>
+</div>
+<hr />
+<div class="card">
+    <div class="card-header">
+        Alt Siparişler
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ürün Id</th>
+                <th>Resmi</th>
+                <th>Adı</th>
+                <th>Fiyatı</th>
+                <th>Miktar</th>
+
+                <th style="width:155px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+
+            @foreach (var item in Model.orderLines)
+            {
+                <tr>
+                    <td>@item.ProductId</td>
+                    <td>
+                        <img src="~/images/products/@item.Image" width="60" />
+                    </td>
+                    <td>@item.ProductName</td>
+                    <td>@item.Price</td>
+
+                    <td>@item.Quantity</td>
+
+                    <td>
+                        <form asp-action="DeleteOrderLine" asp-controller="Admin" method="post">
+                            <input type="hidden" id="OrderLineId" name="OrderLineId" value="@item.OrderLineId" />
+                            <input type="hidden" id="OrderId" name="OrderId" value="@Model.OrderId" />
+                            <button type="submit" class="btn btn-danger btn-sm delete">Kaldır</button>
+
+                        </form>
+
+                        <button class="btn btn-primary btn-sm">Güncelle</button>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+
+</div>
+

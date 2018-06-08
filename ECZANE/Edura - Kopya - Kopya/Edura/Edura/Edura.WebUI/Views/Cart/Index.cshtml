@@ -1,0 +1,128 @@
+﻿@model Cart
+@{
+    ViewData["Title"] = "Index";
+}
+
+<section id="content">
+    <div style="margin-bottom:100px"></div>
+
+
+    @if (Model.Products.Count == 0)
+    {
+        @** x ,sağı fulledi, alttakiler yaklaştı, solu fulledi *@
+        <div style="margin:85px 85px 85px 85px; background-color:rgba(2, 188, 33, 0.41); color:#fff" class="alert" role="alert">
+            <i class="fa fa-exclamation-triangle fa-fw"></i>
+            Sepetinizde hiç ürün bulunmamaktadır!
+
+        </div>
+        <div style="margin:85px 85px 85px 85px" class="text-right">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg"><i class="fa fa-arrow-circle-left fa-fw"></i>Alışverişe Devam Et</a>
+
+
+        </div>
+
+    }
+    else
+    {
+        <!-- shop section start -->
+        <section id="cart" class="container">
+
+            <!-- row start -->
+            <div class="row">
+
+                <!-- cart contents start -->
+                <div class="col-md-8">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Ürün Adı</th>
+                                    <th>Fiyatı</th>
+                                    <th class="qtycolumn">Miktar</th>
+                                    <th>Toplam</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var item in Model.Products)
+                                {
+                                    <tr>
+                                        <td><img alt="" class="img-responsive product-thumb" src="~/images/products/@item.Product.Image"></td>
+                                        <td><a href="#">@item.Product.ProductName</a></td>
+                                        <td>@item.Product.Price.ToString("c")</td>
+                                        <td>
+                                            <div class="form-group">
+                                                <div style="margin-left:17px">@item.Quantity</div>
+                                            </div>
+                                        </td>
+                                        <td>@((item.Quantity * item.Product.Price).ToString("c"))</td>
+                                        <td>
+                                            <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
+                                                <input type="hidden" name="ProductId" value="@item.Product.ProductId" />
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    Kaldır
+                                                    <i class="fa fa-times fa-fw"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+
+                </div>
+                <!-- cart contents end -->
+                <!-- cart total start -->
+                <div class="col-md-4">
+                    <div class="text-left">
+                        <h4>SİPARİŞ <b>DÖKÜMÜ</b></h4>
+                    </div>
+
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Kart Ara Toplamı</th>
+                                <td>@Model.TotalPrice().ToString("c") </td>
+                            </tr>
+                            <tr>
+                                <th>Kargo</th>
+                                <td><i class="fa fa-try" style="font-style:normal"></i> 5,00</td>
+                            </tr>
+                            <tr>
+
+                                <th style="color:#000000">Sipariş Toplamı</th>
+                                <td class="ordertotal" style="color:#000000">@((Model.TotalPrice() + 5).ToString("c"))</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-center">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg"><i class="fa fa-arrow-circle-left fa-fw"></i>Alışverişe Devam Et</a>
+                        <a asp-controller="Cart" asp-action="Checkout" class="btn btn-primary btn-lg">Ödeme <i class="fa fa-arrow-circle-right fa-fw"></i></a>
+
+                    </div>
+
+                </div>
+                <!-- cart total end -->
+
+
+            </div>
+            <!-- row end -->
+
+        </section>
+        <!-- shop section end -->
+    }
+
+</section>
+

@@ -1,0 +1,249 @@
+﻿@model CatalogListModel
+@{
+    ViewData["Title"] = "CatalogList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Yönetici Paneli</h2>
+<hr />
+<div class="card">
+    <div class="card-header">
+       Kategoriler
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Kategori Adı</th>
+                <th style="width:135px;"></th>
+            </tr>
+        </thead>
+        <tbody id="categories">
+
+            @foreach (var item in Model.Categories)
+            {
+            <tr>
+           
+                <td>@item.CategoryId</td>
+                <td>@item.CategoryName</td>
+                <td>
+                    @*ADMİN CONTROLLERINDA EDITCATEGORY METHODUNA CATEGORYID GÖNDER.*@
+                    <a asp-controller="Admin" asp-action="EditCategory" asp-route-id="@item.CategoryId" class="btn btn-dark btn-sm">
+                        Güncelle
+                    </a>
+
+                    <form asp-action="DeleteCategory" asp-controller="Admin" method="post">
+                        <input type="hidden" id="CategoryId" name="CategoryId" value="@item.CategoryId" />
+
+                        <button type="submit" class="btn btn-danger btn-sm delete">Sil</button>
+
+                    </form>
+                </td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+
+    <div class="card-footer">
+        <button class="btn btn-dark" data-toggle="modal" data-target="#addCategoryModal">Yeni Kategori</button>
+            @Html.Partial("_addCategoryForm", new Category())
+            
+            @section scripts{ 
+        <script>
+            $("#addCategory").submit(function (event) {
+                event.preventDefault();
+                var form = $(this);
+                        var token = $('input[name="__RequestVerificationToken"]', form).val();
+
+                        @*İSTEDİĞİMİZ KONTROLÜN(LABEL GİBİ) ADINI YAZARAK BU ŞEKİLDE DEĞERİNİ ALABİLİRİZ.*@
+                        var data = { categoryName: $("#CategoryName").val() };
+
+                        @*ALDIĞIMIZ 'data'yı(yukardaki) _RequestVerificationToken ARACILIĞIYLA ALDIK. *@
+                        var dataWithToken = $.extend(data, { '__RequestVerificationToken': token });
+
+                $.ajax({
+                    url: form.attr("action"),
+                    type: "POST",
+                    data: dataWithToken,
+                    beforeSend: function () {
+                        $("#AjaxLoader").show();
+
+                    },
+                    complete: function () {
+
+                        $("#AjaxLoader").hide();
+                    },
+                    success: function (data) {
+                        var html = '<tr><td>' + data.categoryId + '</td><td>' + data.categoryName + '</td><td><button class="btn btn-dark btn-sm">Güncelle</button> <button class="btn btn-danger btn-sm">Sil</button></td></tr>';
+                        $("#categories").append(html);
+
+                        $("#addCategoryModal").modal('hide');
+
+                    },
+                    error: function () {
+
+
+                    }
+
+
+                })
+
+                    });
+        </script>
+            }
+    
+    </div>
+</div>
+<hr />
+
+<div class="card">
+    <div class="card-header">
+        Products
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Resim</th>
+                <th>Ürün Adı</th>
+                <th>Onay</th>
+                <th>Anasayfa Onayı</th>
+                <th>Çok Seçilen</th>
+                <th style="width:135px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.Products)
+            {
+                <tr>
+                    <th>@item.ProductId</th>
+                    <td>
+                        <img src="~/images/products/@item.Image" width="60" />
+                    </td>
+                    <td>@item.ProductName</td>
+                    <td>
+                        @if (item.IsApproved)
+                        {
+                            <span data-feather="check-square"></span>
+                        }
+                        else
+                        {
+                            <span data-feather="x-square"></span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.IsHome)
+                        {
+                            <span data-feather="check-square"></span>
+                        }
+                        else
+                        {
+                            <span data-feather="x-square"></span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.IsFeatured)
+                        {
+                            <span data-feather="check-square"></span>
+                        }
+                        else
+                        {
+                            <span data-feather="x-square"></span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@item.ProductId" class="btn btn-dark btn-sm">
+                            Güncelle
+                        </a>
+
+                        <form asp-action="DeleteProduct" asp-controller="Admin" method="post">
+                            <input type="hidden" id="ProductId" name="ProductId" value="@item.ProductId" />
+
+                            <button type="submit" class="btn btn-danger btn-sm delete">Sil</button>
+
+                        </form>
+
+
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+    <div class="card-footer">
+        <a class="btn btn-dark" asp-controller="Admin" asp-action="AddProduct">Yeni Ürün</a>
+    </div>
+
+</div>
+
+
+<div class="card">
+    <div class="card-header">
+        Siparişler
+    </div>
+    @if (Model.Orders.Count == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            Hiç Sipariş Bulunamadı
+        </div>
+
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+
+                    <th>Id</th>
+                    <th>Kullanıcı Adı</th>
+                    <th>Sipariş Durumu</th>
+                    <th>Adres Bilgileri</th>
+                    <th>Sipariş Zamanı</th>
+                    <th style="width:135px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.Orders)
+                {
+                    <tr>
+                        <th>@item.OrderId</th>
+
+                        <td>@item.Username</td>
+                        <td>
+                            @if (@item.OrderState == EnumOrderState.Completed)
+                            {
+                                <span data-feather="check-square">Onaylandı</span>
+                            }
+                            else
+                            {
+                                <span data-feather="x-square">Bekliyor</span>
+                            }
+                        </td>
+                        <td>@item.Adres  @item.Sehir/@item.Semt</td>
+                        <td>@item.OrderDate</td>
+                        <td>
+                            <a asp-controller="Admin" asp-action="EditOrder" asp-route-id="@item.OrderId" class="btn btn-dark btn-sm">
+                                Güncelle
+                            </a>
+                            <form asp-action="DeleteOrder" asp-controller="Admin" method="post">
+                                <input type="hidden" id="OrderId" name="OrderId" value="@item.OrderId" />
+                              
+
+                                <button type="submit" class="btn btn-danger btn-sm delete">Sil</button>
+
+                            </form>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    }
+
+
+
+</div>

@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <!-- METAS -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="~/css/bundle.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- TITLE -->
+    <title>DERMOLIPA Online Eczaneniz</title>
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="images/favicon.png" />
+ 
+</head>
+
+    <body>
+
+        <!-- WRAPPER START -->
+        <div id="wrapper">
+            <!-- HEADER START -->
+            <section id="header">
+                <!-- Fixed navbar -->
+                <nav class="navbar navbar-default navbar-fixed-top" style="margin-bottom:100px; background-color:rgba(2, 188, 33, 0.41)">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="#">
+                                <img src="~/images/1_Primary_logo_on_transparent_209x71.png" alt="dermolipa" width="100" height="45">
+                                <a style="font-size:30px; color:#fff" href="~/Home/Index">Online Eczaneniz</a>
+                            </a>
+                        </div>
+                        <div id="navbar" class="navbar-collapse collapse">
+                            <ul class="nav navbar-nav">
+
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@User.Identity.Name</a>
+                                        <ul class="dropdown-menu">
+
+                                            <li> <a asp-controller="Order" asp-action="ShowOrder" class="btn btn-primary btn-lg" style="text-align:left">Account</a></li>
+                                            <li><a href="/Account/Logout">Logout</a></li>
+                                        </ul>
+                                    </li>
+                                    if (User.IsInRole("admin"))
+                                    {
+                                        <li><a href="~/Admin/CatalogList">Yönetici Paneli</a></li>
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    <li><a href="/Account/Login"><i class="fa fa-user-o"></i> Login</a></li>
+                                }
+                                <li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart fa-fw"></i> Cart (@await Component.InvokeAsync("CartSummary"))</a></li>
+
+
+                            </ul>
+
+                        </div><!--/.nav-collapse -->
+                    </div>
+                </nav>
+            </section>
+            <!-- HEADER END -->
+            <!-- PAGE TITLE START -->
+            <div style="margin-bottom:40px; margin-top:60px">
+
+            </div>
+            <!-- PAGE TITLE END -->
+            <!-- CONTENT START -->
+            @RenderBody()
+            <!-- CONTENT END -->
+            <!-- FOOTER START -->
+            <section id="footer" style="background-color:rgba(68, 218, 204, 0.8)">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="~/images/1_Primary_logo_on_transparent_209x71.png" alt="DERMOLIPA - Güvenilir eczanenin adresi">
+                            @*<p style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size:30px ; color:black">DERMO<b>LIPA</b></p>*@
+                            <p>Bugün yüzlerce müşterimizi dinliyor ve onların ihtiyaçlarına ürünlerimizle destek oluyoruz.Sağlık sektöründe olmamızın getirdiği yüksek bilinç ve sorumluluk nedeniyle resmi ithalatçı, distribütor veya ecza depoları dışında güvenilir olmayan tedarikçilerden kesinlikle ürün almıyoruz.Ürün çeşitliliğimizi ise her geçen gün arttırıyoruz. <b>Ürünlerimizin tamamı faturalı olup üretici ve ithalatçı firmaların güvencesi ve garantisi altında %100 orjinal olarak size sunulmaktadır.</b>.
+                            </p>
+                            <br>
+
+                        </div>
+                        <div class="col-md-3" style="margin-top:30px">
+                            <h4>DAĞITIM DEPOSU</h4>
+                            <p> Egemenlik Mah. Kemalpaşa Cad. No:246 Işıkkent 35070 Bornova - İzmir </p>
+                        </div>
+                        <div class="col-md-3" style="margin-top:30px">
+                            <h4>İLETİŞİM</h4>
+                            <p><i class="fa fa-map-pin fa-fw"></i> 185.Sk, İzmir/BORNOVA, 35100, Türkiye</p>
+                            <p><i class="fa fa-phone fa-fw"></i> +90(538) 279 1953</p>
+                            <p><i class="fa fa-phone fa-fw"></i>+90(533) 249 2173</p>
+                            <p><i class="fa fa-envelope fa-fw"></i> aysu.koksal7@gmail.com</p>
+                            <p><i class="fa fa-envelope fa-fw"></i> goksel0602@gmail.com</p>
+                        </div>
+                        <div class="col-md-3" style="margin-top:30px">
+                            <h4>BÜLTEN</h4>
+                            <p>Aylık haber bültenimizden haberdar olmak ve güncel kalmak için abone olun</p>
+                            <form action="#" method="post">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><i class="fa fa-envelope-o"></i></div>
+                                        <input type="email" class="form-control" id="email" placeholder="E-mail adresinizi giriniz" required>
+                                    </div>
+                                </div>
+                                <div class="form-group pull-right">
+                                    <script>
+                                        function myFunction() {
+                                            alert("Abone Olundu!");
+                                        }
+                                    </script>
+
+                                    <button onclick="myFunction()" type="submit" class="btn btn-primary">Abone Ol</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <hr>
+                        <div class="col-md-12 text-center bottom">
+                            <p>Copyright &copy; 2018 Codeniner. All rights reserved by DERMOLIPA.</p>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- FOOTER END -->
+
+        </div>
+        <!-- WRAPPER END -->
+        <!-- back to top button -->
+
+        <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+
+        <script src="~/js/bundle.js"></script>
+
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '../../www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-81122143-3', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+        <!-- STYLE SWITCHER -->
+        <script src="demo/demo.js"></script>
+        @*<div id="styleswitcher">
+            <input id="settings-btn" class="settings-btn" type="checkbox">
+            <label for="settings-btn" class="settings-box-element"><i class="fa fa-2x fa-gear"></i></label>
+            <div class="buttons-wrapper settings-box-element">
+                <h4 class="text-uppercase">Change Color Style</h4>
+                <p><button id="demo-lunar" class="btn demo-btn demo-lunar">Lunar (Default)</button></p>
+                <p><button id="demo-blue" class="btn demo-btn demo-blue">Blue</button></p>
+                <p><button id="demo-green" class="btn demo-btn demo-green">Green</button></p>
+                <p><button id="demo-red" class="btn demo-btn demo-red">Red</button></p>
+                <p><button id="demo-orange" class="btn demo-btn demo-orange">Orange</button></p>
+            </div>
+        </div>*@
+
+    </body>
+
+</html>

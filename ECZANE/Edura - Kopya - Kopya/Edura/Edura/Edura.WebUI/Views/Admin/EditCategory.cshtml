@@ -1,0 +1,151 @@
+﻿@model AdminEditCategoryModel
+@{
+    ViewData["Title"] = "EditCategory";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="cart">
+    <div class="card-header">
+        Kategori Güncelle
+    </div>
+    <form asp-controller="Admin" asp-action="EditCategory" method="post" >
+        <div class="card-body">
+            @Html.AntiForgeryToken()
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <input type="hidden" name="CategoryId" value="@Model.CategoryId" />
+            <div class="form-group">
+                <label asp-for="CategoryName">Kategori Adı</label>
+                <input asp-for="CategoryName" class="form-control" placeholder="KategoriAdı" />
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Kaydet</button>
+        </div>
+    </form>
+</div>
+<hr />
+<div class="card">
+    <div class="card-header">
+        Ürünler
+    </div>
+    @if (Model.Products.Count() == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            Hiç Ürün Bulunamadı
+        </div>
+
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                   <th>Id</th>
+                    <th>resim</th>
+                    <th>Ürün İsmi</th>
+                    <th>Onay Durumu</th>
+                    <th>Anasayfa Onayı</th>
+                    <th>Çok Satılanlar</th>
+                    <th style="width:155px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.Products)
+                {
+                    <tr>
+                         
+                        <th>@item.ProductId</th>
+                        <td>
+                            <img src="~/images/products/@item.Image" width="60" />
+                        </td>
+                        <td>@item.ProductName</td>
+                        <td>
+                            @if (item.IsApproved)
+                            {
+                                <span data-feather="check-square"></span>
+                            }
+                            else
+                            {
+                                <span data-feather="x-square"></span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.IsHome)
+                            {
+                                <span data-feather="check-square"></span>
+                            }
+                            else
+                            {
+                                <span data-feather="x-square"></span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.IsFeatured)
+                            {
+                                <span data-feather="check-square"></span>
+                            }
+                            else
+                            {
+                                <span data-feather="x-square"></span>
+                            }
+                        </td>
+                        <td>
+                            <form asp-action="RemoveFromCategory" asp-controller="Admin" method="post">
+                                <input type="hidden" id="CatgoryId" name="CategoryId" value="@Model.CategoryId" />                                     
+                                <input type="hidden" id="ProductId" name="ProductId" value="@item.ProductId" />
+                                <button type="submit" class="btn btn-danger btn-sm delete">Kaldır</button>
+
+                            </form>
+
+                  
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    }
+
+    <div class="card-footer">
+        <a class="btn btn-primary" asp-controller="Admin" asp-action="AddProduct">Ürün Ekle</a>
+    </div>
+
+</div>
+@*<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+@section scripts
+    {
+    <script type="text/javascript">
+        $(".delete").click(function (event) {
+            event.preventDefault();
+            var form = $(this).parent();
+            var row = form.parent("td").parent("tr");
+            var token = $('input[name="__RequestVerificationToken"]', form).val();
+            var data = { categoryId: $("#CategoryId", form).val(), productId: $("#ProductId", form).val() };
+
+            var dataWithToken = $.extend(data, { '__RequestVerificationToken': token });
+            
+
+            $.ajax({
+                url: form.attr("action"),
+                data: dataWithToken,
+                type: "Post",
+                beforeSend: function () {
+                    $("#ajax-loader").show();
+                },
+                complete: function () {
+                    
+                    $("#ajax-loader").hide();
+                },
+                success: function () {
+                    row.remove();
+
+                },
+                error: function () {
+
+
+                }
+            });
+        });
+    </script>
+}*@

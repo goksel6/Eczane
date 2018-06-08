@@ -1,0 +1,122 @@
+﻿@model AdminEditProductModel
+@{
+    ViewData["Title"] = "EditProduct";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="cart">
+    <div class="card-header">
+        Ürün Güncelle
+    </div>
+    <form asp-controller="Admin" asp-action="EditProduct" method="post" enctype="multipart/form-data">
+        <div class="card-body">
+            @Html.ValidationSummary()
+            @Html.AntiForgeryToken()
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <input type="hidden" name="ProductId" value="@Model.ProductId" />
+
+
+            <div class="form-group">
+                <label asp-for="ProductName"></label>
+                <input asp-for="ProductName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Price"></label>
+                <input asp-for="Price" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="IsApproved"></label>
+                <input asp-for="IsApproved" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="IsFeatured"></label>
+                <input asp-for="IsFeatured" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="IsHome"></label>
+                <input asp-for="IsHome" class="form-control" />
+            </div>
+
+
+            <div class="form-group">
+                <input type="file" name="file" id="file" class="form-control" />
+            </div>
+            @*<div class="form-group">
+            <label for="exampleFormControlSelect2">Example multiple select</label>
+            <select multiple class="form-control" id="exampleFormControlSelect2">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>*@
+
+            <div class="form-group">
+                <label>Kategori Ekle</label>
+                <input type="text" name="CategoryId" id="CategoryId" class="form-control" />
+            </div>
+        </div>
+        <div class="card-footer">
+            <input type="submit" class="btn btn-primary" value="Kaydet" />
+        </div>
+    </form>
+</div>
+<hr />
+<div class="card">
+    <div class="card-header">
+        Kategoriler
+    </div>
+    @if (Model.Categories.Count() == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            Hiç Kategori Bulunamadı
+        </div>
+
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+
+                    <th>Id</th>
+                    <th>Kategori Adı</th>
+                  
+                    <th style="width:155px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.Categories)
+                {
+                    <tr>
+
+                        <td>@item.CategoryId</td>
+                       
+                        <td>@item.CategoryName</td>
+                      
+                       
+                     
+                        <td>
+                            <form asp-action="RemoveFromProduct" asp-controller="Admin" method="post">
+                                <input type="hidden" id="ProductId" name="ProductId" value="@Model.ProductId" />
+                                <input type="hidden" id="CategoryId" name="CategoryId" value="@item.CategoryId" />
+                                <button type="submit" class="btn btn-danger btn-sm delete">Kaldır</button>
+
+                            </form>
+
+                            <button class="btn btn-primary btn-sm">Güncelle</button>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    }
+
+    <div class="card-footer">
+        <a class="btn btn-primary" asp-controller="Admin" asp-action="AddProduct">Yeni Ürün</a>
+    </div>
+
+</div>
